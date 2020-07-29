@@ -17,4 +17,13 @@ INSERT INTO role (title, salary, department_id) VALUES
 (RN, 65000, 4);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES
-()
+(Matt, Stewart, 1, 1),
+(Lauren, Phellps, 2, null),
+(Walker, Parks, 3, null),
+(Heather, Brady, 4, 2),
+(Pete, Graham, 5, null),
+(Wendy, Lance, 6, 3),
+(Brandy, Mcgrahm, 7, null),
+(Penny, Walker, 8, null),
+(Tim, Jones, 9, null),
+(Pam, Smith, 10, null);
