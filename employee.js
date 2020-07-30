@@ -21,59 +21,70 @@ function startSearch() {
       name: "qList",
       message: "What would like to do within your employee list?",
       choices: [
-        "Add",
-        "View",
-        "Update"
+        "View all employees",
+        "View all departments",
+        "View all roles",
+        "Add a department",
+        "Add an employee",
+        "Add a role",
+        "Update an employee's role"
       ]
     })
     .then(function(response) {
       switch(response.qList){
-      case "Add":
-        handleAdd();
+      case "View all employees":
+        viewEmployee();
         break;
       
-      case "View":
-        handleView();
+      case "View all departments":
+        viewDepartments();
         break;
 
-      case "Update":
-        handleUpdate();
+      case "View all roles":
+        viewRoles();
+        break;
+
+      case "Add a department":
+        addDepartment();
+        break;
+      
+      case "Add an employee":
+        addEmployee();
+        break;
+
+      case "Add a role":
+        addRole();
+        break;
+
+      case "Update an employee's role":
+        updateRole();
         break;
       }
     });
 }
 
-function handleView() {
-  inquirer.prompt([
-    {
-      type: "rawlist",
-      name: "viewList",
-      message: "Select what you would like to view",
-      choices: [
-        "departments",
-        "roles",
-        "employees"
-      ]
-    }
-  ]).then(function (answers) {
-    if (answers.viewList === "departments") {
-      var query = "SELECT * FROM department";
+function viewEmployee(){
+  var query = "SELECT * FROM employee";
       connection.query(query, function (err, res) {
         console.table(res);
+        startSearch();
       })
-    }
-    if(answers.viewList === "roles"){
-      var query = "SELECT * FROM roles";
-      connection.query(query, function (err, res) {
-        console.table(res);
-      })
-    }
-    if(answers.viewList === "employees"){
-      var query = "SELECT * FROM employee";
-      connection.query(query, function (err, res) {
-        console.table(res);
-      })
-    }
+}
+
+function viewDepartments(){
+  var query = "SELECT * FROM department";
+  connection.query(query, function (err, res) {
+    console.table(res);
+    startSearch();
   })
 }
+
+function viewRoles(){
+  var query = "SELECT * FROM roles";
+  connection.query(query, function (err, res) {
+    console.table(res);
+    startSearch();
+  })
+}
+
 startSearch();
