@@ -65,15 +65,17 @@ function startSearch() {
 
 function viewEmployee(){
   var query = "SELECT * FROM employee";
-      connection.query(query, function (err, res) {
-        console.table(res);
-        startSearch();
-      })
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+    console.table(res);
+    startSearch();
+  })
 }
 
 function viewDepartments(){
   var query = "SELECT * FROM department";
   connection.query(query, function (err, res) {
+    if (err) throw err;
     console.table(res);
     startSearch();
   })
@@ -82,8 +84,57 @@ function viewDepartments(){
 function viewRoles(){
   var query = "SELECT * FROM roles";
   connection.query(query, function (err, res) {
+    if (err) throw err;
     console.table(res);
     startSearch();
+  })
+}
+
+function addDepartment(){
+  var query = "INSERT INTO department (name) VALUES (?)"
+  inquirer
+    .prompt([{
+      name: "department",
+      type: "input",
+      message: "What is the name of your new department"
+    }]).then(function(res){
+      const departName = [res.department]
+      console.log(departName);
+      connection.query(query, departName, function(err,res){
+        if (err) throw err;
+        console.log("Department has been created.");
+        startSearch();
+      })
+    })
+}
+
+function addEmployee(){
+  var query = "INSERT INTO employee (first_name, last_name, role_id) VALUES(?, ?, ?)"
+  inquirer
+  .prompt([{
+    name: "firstName",
+    type: "input",
+    message: "What is the employee's first name?"
+  },
+  {
+    name: "lastName",
+    type: "input",
+    message: "What is the employee's last name?"
+  },
+  {
+    name: "role",
+    type: "input",
+    message:"What is the employee's role ID?"
+  }])
+  .then(function(res){
+    // var employee = res.firstName, res.lastName, res.role[]
+    var employee = [res.firstName, res.lastName, res.role];
+    console.log(employee);
+    connection.query(query, employee, function(err, res){
+      if (err) throw err;
+      console.log("Added new employee");
+      startSearch();
+    })
   })
 }
 
