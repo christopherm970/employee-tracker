@@ -138,4 +138,34 @@ function addEmployee(){
   })
 }
 
+function addRole(){
+  var query = "INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)"
+  inquirer
+  .prompt([{
+    name: "title",
+    type: "input",
+    message: "What is the new title?"
+  },
+  {
+    name: "salary",
+    type: "input",
+    message: "What is the new salary for that title?"
+  },
+  {
+    name: "departID",
+    type: "input",
+    message:"What is the department ID for this new role?"
+  }])
+  .then(function(res){
+    // var employee = res.firstName, res.lastName, res.role[]
+    var role = [res.title, res.salary, res.departID];
+    console.log(role);
+    connection.query(query, role, function(err, res){
+      if (err) throw err;
+      console.log("Added new role");
+      startSearch();
+    })
+  })
+}
+
 startSearch();
