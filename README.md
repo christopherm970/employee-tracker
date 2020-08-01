@@ -7,3 +7,4 @@ Application that allows you a user to track employee information. User is able t
 Application runs throught the terminal or console using node.js NPM Install required. Mysql also required to create database.
 
 ### Example
+![Demo](employeeDemo.gif)
