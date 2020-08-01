@@ -16,7 +16,7 @@ connection.connect(function (err) {
 
 function startSearch() {
   inquirer
-  .prompt({
+    .prompt({
       type: "rawlist",
       name: "qList",
       message: "What would like to do within your employee list?",
@@ -30,40 +30,40 @@ function startSearch() {
         "Update an employee's role"
       ]
     })
-    .then(function(response) {
-      switch(response.qList){
-      case "View all employees":
-        viewEmployee();
-        break;
-      
-      case "View all departments":
-        viewDepartments();
-        break;
+    .then(function (response) {
+      switch (response.qList) {
+        case "View all employees":
+          viewEmployee();
+          break;
 
-      case "View all roles":
-        viewRoles();
-        break;
+        case "View all departments":
+          viewDepartments();
+          break;
 
-      case "Add a department":
-        addDepartment();
-        break;
-      
-      case "Add an employee":
-        addEmployee();
-        break;
+        case "View all roles":
+          viewRoles();
+          break;
 
-      case "Add a role":
-        addRole();
-        break;
+        case "Add a department":
+          addDepartment();
+          break;
 
-      case "Update an employee's role":
-        updateRole();
-        break;
+        case "Add an employee":
+          addEmployee();
+          break;
+
+        case "Add a role":
+          addRole();
+          break;
+
+        case "Update an employee's role":
+          updateRole();
+          break;
       }
     });
 }
 
-function viewEmployee(){
+function viewEmployee() {
   var query = "SELECT * FROM employee";
   connection.query(query, function (err, res) {
     if (err) throw err;
@@ -72,7 +72,7 @@ function viewEmployee(){
   })
 }
 
-function viewDepartments(){
+function viewDepartments() {
   var query = "SELECT * FROM department";
   connection.query(query, function (err, res) {
     if (err) throw err;
@@ -81,7 +81,7 @@ function viewDepartments(){
   })
 }
 
-function viewRoles(){
+function viewRoles() {
   var query = "SELECT * FROM roles";
   connection.query(query, function (err, res) {
     if (err) throw err;
@@ -90,17 +90,16 @@ function viewRoles(){
   })
 }
 
-function addDepartment(){
+function addDepartment() {
   var query = "INSERT INTO department (name) VALUES (?)"
   inquirer
     .prompt([{
       name: "department",
       type: "input",
       message: "What is the name of your new department"
-    }]).then(function(res){
+    }]).then(function (res) {
       const departName = [res.department]
-      console.log(departName);
-      connection.query(query, departName, function(err,res){
+      connection.query(query, departName, function (err, res) {
         if (err) throw err;
         console.log("Department has been created.");
         startSearch();
@@ -108,64 +107,85 @@ function addDepartment(){
     })
 }
 
-function addEmployee(){
+function addEmployee() {
   var query = "INSERT INTO employee (first_name, last_name, role_id) VALUES(?, ?, ?)"
   inquirer
-  .prompt([{
-    name: "firstName",
-    type: "input",
-    message: "What is the employee's first name?"
-  },
-  {
-    name: "lastName",
-    type: "input",
-    message: "What is the employee's last name?"
-  },
-  {
-    name: "role",
-    type: "input",
-    message:"What is the employee's role ID?"
-  }])
-  .then(function(res){
-    // var employee = res.firstName, res.lastName, res.role[]
-    var employee = [res.firstName, res.lastName, res.role];
-    console.log(employee);
-    connection.query(query, employee, function(err, res){
-      if (err) throw err;
-      console.log("Added new employee");
-      startSearch();
+    .prompt([{
+      name: "firstName",
+      type: "input",
+      message: "What is the employee's first name?"
+    },
+    {
+      name: "lastName",
+      type: "input",
+      message: "What is the employee's last name?"
+    },
+    {
+      name: "role",
+      type: "input",
+      message: "What is the employee's role ID?"
+    }])
+    .then(function (res) {
+      // var employee = res.firstName, res.lastName, res.role[]
+      var employee = [res.firstName, res.lastName, res.role];
+      connection.query(query, employee, function (err, res) {
+        if (err) throw err;
+        console.log("Added new employee");
+        startSearch();
+      })
     })
-  })
 }
 
-function addRole(){
+function addRole() {
   var query = "INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)"
   inquirer
+    .prompt([{
+      name: "title",
+      type: "input",
+      message: "What is the new title?"
+    },
+    {
+      name: "salary",
+      type: "input",
+      message: "What is the new salary for that title?"
+    },
+    {
+      name: "departID",
+      type: "input",
+      message: "What is the department ID for this new role?"
+    }])
+    .then(function (res) {
+      // var employee = res.firstName, res.lastName, res.role[]
+      var role = [res.title, res.salary, res.departID];
+      connection.query(query, role, function (err, res) {
+        if (err) throw err;
+        console.log("Added new role");
+        startSearch();
+      })
+    })
+}
+
+function updateRole(){
+  var query = "UPDATE employee SET role_id = ? WHERE id = ?";
+  inquirer
   .prompt([{
-    name: "title",
+    name: "updateRole",
     type: "input",
-    message: "What is the new title?"
+    message: "What is the role id you would like to update to?"
   },
   {
-    name: "salary",
+    name: "id",
     type: "input",
-    message: "What is the new salary for that title?"
-  },
-  {
-    name: "departID",
-    type: "input",
-    message:"What is the department ID for this new role?"
+    message: "What is the employee's id that you are updating?"
   }])
-  .then(function(res){
-    // var employee = res.firstName, res.lastName, res.role[]
-    var role = [res.title, res.salary, res.departID];
-    console.log(role);
-    connection.query(query, role, function(err, res){
+  .then(function (res){
+    var updateRole = [res.updateRole, res.id];
+    connection.query(query, updateRole, function(err, res){
       if (err) throw err;
-      console.log("Added new role");
+      console.log(res);
+      console.log("Updated employee's role");
       startSearch();
     })
   })
 }
-
 startSearch();
